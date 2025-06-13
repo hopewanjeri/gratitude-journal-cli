@@ -14,17 +14,21 @@ func main() {
 	fmt.Println("🌞 Welcome to your Gratitude Journal 🌸")
 	fmt.Println("1. Write a new gratitude entry")
 	fmt.Println("2. View my past entries")
-	fmt.Print("Choose 1 or 2: ")
+	fmt.Println("3. Clear all entries")
+	fmt.Print("Choose 1, 2, or 3: ")
 
 	choice, _ := reader.ReadString('\n')
 	choice = strings.TrimSpace(choice)
 
-	if choice == "1" {
+	switch choice {
+	case "1":
 		writeEntry(reader)
-	} else if choice == "2" {
+	case "2":
 		viewEntries()
-	} else {
-		fmt.Println("Oops! I only understand 1 or 2. Try again next time 😅")
+	case "3":
+		clearJournal()
+	default:
+		fmt.Println("Oops! I only understand 1, 2, or 3. Try again next time 😅")
 	}
 }
 
@@ -58,7 +62,21 @@ func viewEntries() {
 		return
 	}
 
-	fmt.Println("\n📔 Your Gratitude Entries:")
-	fmt.Println("----------------------------")
-	fmt.Println(string(data))
+	if len(data) == 0 {
+		fmt.Println("📭 Your journal is empty. Time to fill it with gratitude!")
+	} else {
+		fmt.Println("\n📔 Your Gratitude Entries:")
+		fmt.Println("----------------------------")
+		fmt.Println(string(data))
+	}
+}
+
+func clearJournal() {
+	err := os.Truncate("journal.txt", 0)
+	if err != nil {
+		fmt.Println("❌ Failed to clear journal:", err)
+		return
+	}
+
+	fmt.Println("🧼 Journal cleared! A fresh start for fresh gratitude 💖")
 }
